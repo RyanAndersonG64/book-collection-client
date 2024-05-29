@@ -1,12 +1,7 @@
 import axios from 'axios'
+import { useState } from 'react'
 
 const baseUrl = 'http://127.0.0.1:8000'
-
-const displayUser = ({ username }) => {
-    return (
-        <h2>{ username }</h2>
-    )
-}
 
 export const createUser = ({ username, password, firstName, lastName }) => {
     axios ({
@@ -35,16 +30,32 @@ export const getToken = ({ auth, username, password }) => {
     })
     .catch(error => console.log('get token: ILLEGAL'))
 }
-
 export const fetchUser = ({ auth }) => {
-    axios({
+    return axios({
         method: 'get',
         url: `${baseUrl}/profile/`,
         headers: {
             Authorization: `Bearer ${auth.accessToken}`
         }
     })
-    .then(response => 
-        console.log(response.data.first_name)
+    .then(response => {
+        console.log(response)
+        return response
+    }
+    ).catch(error => console.log('ILLEGAL'))
+}
+
+export const fetchBookList = ({ auth }) => {
+    return axios({
+        method: 'get',
+        url: `${baseUrl}/books/`,
+        headers: {
+            Authorization: `Bearer ${auth.accessToken}`
+        }
+    })
+    .then(response => {
+        console.log(response)
+        return response
+    }
     ).catch(error => console.log('ILLEGAL'))
 }
