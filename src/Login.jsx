@@ -8,6 +8,8 @@ const CreateUserInput = () => {
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [userCreated, setUserCrated] = useState('')
+  const [editable, setEditable] = useState(false)
 
   const submit = () => {
     createUser ({ username, password, firstName, lastName})
@@ -15,26 +17,30 @@ const CreateUserInput = () => {
 
   return (
     <div className="p-5">
-      <h1>Create User:</h1>
+      <button onClick={() => {
+        setEditable(true)
+        setUserCrated('')
+      }}
+        >Create User</button>
       <div>
         <div>Username:</div>
-        <input
+        <input readOnly = {!editable}
           onChange={e => setUsername(e.target.value)}
           value={username}
           />
           <div>Password:</div>
-        <input
+        <input readOnly = {!editable}
           type = 'password'
           onChange={e => setPassword(e.target.value)}
           value={password}
           />
         <div>First Name:</div>
-        <input
+        <input readOnly = {!editable}
           onChange={e => setFirstName(e.target.value)}
           value={firstName}
           />
         <div>Last Name:</div>
-        <input
+        <input readOnly = {!editable}
           onChange={e => setLastName(e.target.value)}
           value={lastName}
           />
@@ -42,7 +48,18 @@ const CreateUserInput = () => {
       
 
       <div style={{ marginTop: 20 }}>
-        <button onClick={() => submit()}>Submit</button>
+        <button onClick={() => {
+          submit()
+          setUsername('')
+          setPassword('')
+          setFirstName('')
+          setLastName('')
+          setUserCrated('New user created!')
+          setEditable(false)
+        }
+        }
+        >Submit</button>
+        <h2>{ userCreated }</h2>
       </div>
     </div>
   )

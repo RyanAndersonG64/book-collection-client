@@ -2,6 +2,12 @@ import axios from 'axios'
 
 const baseUrl = 'http://127.0.0.1:8000'
 
+const displayUser = ({ username }) => {
+    return (
+        <h2>{ username }</h2>
+    )
+}
+
 export const createUser = ({ username, password, firstName, lastName }) => {
     axios ({
         method: 'post',
@@ -37,7 +43,8 @@ export const fetchUser = ({ auth }) => {
         headers: {
             Authorization: `Bearer ${auth.accessToken}`
         }
-    }).then(response => 
-        console.log(response)
+    })
+    .then(response => 
+        console.log(response.data.first_name)
     ).catch(error => console.log('ILLEGAL'))
 }
