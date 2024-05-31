@@ -1,6 +1,6 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import { AuthContext } from "./authContext"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { createUser, getToken } from "./api"
 
 const CreateUserInput = () => {
@@ -70,6 +70,14 @@ function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (auth.accessToken) {
+      navigate('/')
+    } 
+  }, [auth.accessToken])
+
   const submit = () => {
     getToken({ auth, username, password})
   }
@@ -92,7 +100,10 @@ function Login() {
       </div>
 
       <div style={{ marginTop: 20 }}>
-        <button onClick={() => submit()}>Submit</button>
+        <button onClick={() => submit()}>
+          {/* <a href = './'>Login</a> */}
+          Log in
+        </button>
       </div>
 
       <hr/>
