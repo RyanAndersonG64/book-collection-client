@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "./authContext"
-import { addReader, createAuthor, createBook, fetchBookList, fetchUser } from "./api"
+import { addReader, createAuthor, createBook, fetchBookList, fetchUser, removeReader, deleteBookData } from "./api"
 import axios from "axios"
 
 function App() {
@@ -50,7 +50,8 @@ function App() {
             let bookId = bookTitles[0].id
             console.log('bookID =', bookId)
             console.log('userId = ', userId)
-            addReader ({ bookId, userId })
+            addReader ({ auth, bookId, userId })
+           .then(() => submit())
           } else {
             alert('This book is already in your list')
           }
@@ -60,9 +61,21 @@ function App() {
           const authorToAdd = prompt("Enter the book's author")
           const addPublished = Number(prompt("Enter the book's published date"))
           createBook ({ auth, title: bookToAdd, published: addPublished, author: authorToAdd, readers: userId })
+          .then(() => submit())
 
         }
       })
+  }
+
+  const removeBookFromList = (book_id) => {
+    removeReader ({ bookId: book_id, userId })
+    .then(() => submit())
+  }
+
+  const deleteBook = (book_id) => {
+    console.log('delete has been pressed for book id ', book_id)
+    deleteBookData ({ auth, bookId: book_id })
+    .then(() => submit())
   }
 
   return (
@@ -81,10 +94,25 @@ function App() {
         Add a Book
       </button>
       <h2> { userGreeting } </h2>
+      <hr/>
       {bookList.map(book => {
         return book.readers.includes(userId) ? (
-          <div key = {book.id}>
-            <h3> { book.title } </h3>
+          <div className = 'book' key = {book.id}>
+            <h3> { book.title } </h3><h2> {  book.author.name } </h2>
+
+            <button onClick = {() => {
+                removeBookFromList(book.id)
+              }}>
+              Remove book
+            </button> 
+
+            <button style={{ marginLeft: 20 }}
+              onClick = {() => {
+                deleteBook(book.id)
+              }}>
+              Delete book
+            </button> 
+            <hr/>
           </div>
         ) : null
       })}

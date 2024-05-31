@@ -31,6 +31,7 @@ export const createAuthor = ({ name }) => {
 }
 
 export const createBook = ({ auth, title, published = 1969, author, readers }) => {
+    console.log(auth.accessToken)
     return axios ({
         method: 'post',
         url: `${baseUrl}/create-book/`,
@@ -39,9 +40,9 @@ export const createBook = ({ auth, title, published = 1969, author, readers }) =
             published: published,
             author: author,
             readers: readers,
-            headers: {
-                Authorization: `Bearer ${auth.accessToken}`
-            }
+        },
+        headers: {
+            Authorization: `Bearer ${auth.accessToken}`
         }
     }).then(response => {
         console.log(response)
@@ -92,10 +93,29 @@ export const fetchBookList = ({ auth }) => {
     ).catch(error => console.log('ILLEGAL'))
 }
 
-export const addReader = ({ bookId, userId }) => {
+export const addReader = ({ auth, bookId, userId }) => {
     return axios({
         method: 'PUT',
         url: `${baseUrl}/add-reader/`,
+        data: {
+            bookId,
+            readers: userId
+        },
+        headers: {
+            Authorization: `Bearer ${auth.accessToken}`
+        }
+    })
+    .then(response => {
+        
+        return response
+    }
+    ).catch(error => console.log('Add reader:', error))
+}
+
+export const removeReader = ({ bookId, userId }) => {
+    return axios({
+        method: 'PUT',
+        url: `${baseUrl}/remove-reader/`,
         data: {
             bookId,
             readers: userId
@@ -105,5 +125,24 @@ export const addReader = ({ bookId, userId }) => {
         
         return response
     }
-    ).catch(error => console.log('Add reader:', error))
+    ).catch(error => console.log('Remove reader:', error))
+}
+
+export const deleteBookData = ({ auth, bookId }) => {
+    console.log(bookId)
+    return axios ({
+        method: 'DELETE',
+        url: `${baseUrl}/delete-book/`,
+        data: {
+            bookId
+        },
+        headers: {
+            Authorization: `Bearer ${auth.accessToken}`
+        }
+    })
+    .then(response => {
+        
+        return response
+    }
+    ).catch(error => console.log('Delete book:', error))
 }
